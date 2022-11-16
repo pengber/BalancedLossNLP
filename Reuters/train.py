@@ -10,20 +10,22 @@ from tqdm import trange
 from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score, roc_auc_score
 
 ########## Configuration Part 1 ###########
+
+data_target_dir = "D:\\data\\Reuters-21578\\BalancedLossNLP\\"
 source_dir = './'
 prefix = 'reuters' 
 suffix = 'rand123'
 model_name = 'bert_base'
 loss_func_name = str(sys.argv[1]) # The loss function name will be given as first argument
 
-if model_name == 'bert_base':
-    model_checkpoint = os.path.join(source_dir, 'berts', 'bert-base-uncased')
+# if model_name == 'bert_base':
+#     model_checkpoint = os.path.join(data_target_dir,'bert-base-uncased')
 
-data_train=pickle.load(open(os.path.join(source_dir, 'data', 'data_train.'+suffix),'rb'))
-data_val=pickle.load(open(os.path.join(source_dir, 'data', 'data_val.'+suffix),'rb'))
-labels_ref=pickle.load(open(os.path.join(source_dir, 'data', 'labels_ref.'+suffix),'rb'))
-class_freq=pickle.load(open(os.path.join(source_dir, 'data', 'class_freq.'+suffix),'rb'))
-train_num=pickle.load(open(os.path.join(source_dir, 'data', 'train_num.'+suffix),'rb'))
+data_train=pickle.load(open(os.path.join(data_target_dir, 'data_train.'+suffix),'rb'))
+data_val=pickle.load(open(os.path.join(data_target_dir,  'data_val.'+suffix),'rb'))
+labels_ref=pickle.load(open(os.path.join(data_target_dir, 'labels_ref.'+suffix),'rb'))
+class_freq=pickle.load(open(os.path.join(data_target_dir, 'class_freq.'+suffix),'rb'))
+train_num=pickle.load(open(os.path.join(data_target_dir, 'train_num.'+suffix),'rb'))
 num_labels = len(labels_ref)
 max_len = 512
 lr = 1e-4
@@ -32,8 +34,8 @@ batch_size = 32
 
 ########## set up ###########
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, max_len=max_len)
-model = nn.DataParallel(AutoModelForSequenceClassification.from_pretrained(model_checkpoint, num_labels=num_labels)).to(device)
+# config = BertConfig.from_pretrained('bert-base-uncased', max_len = max_len)    # Download configuration from S3 and cache.
+model = nn.DataParallel(AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=num_labels)).to(device)
 
 param_optimizer = list(model.named_parameters())
 no_decay = ['bias', 'LayerNorm.weight'] 
