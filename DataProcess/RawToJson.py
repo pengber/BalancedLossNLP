@@ -1,8 +1,9 @@
 import json
 from tqdm import tqdm
 
+# 本程序是对Reuter-21578的原始数据的处理, 处理成BalanacedLossNLP所需要的[{"text":"....","labels":["1","2","3"]},{},...]格式
 raw_data_dir = "D:\\data\\Reuters-21578\\raw\\"
-data_target_dir = "D:\\data\\Reuters-21578\\BalancedLossNLP\\"
+data_target_dir = "D:\\data\\Reuters-21578\\data_BalancedLossNLP\\proc_data\\"
 
 train_data_target_path = data_target_dir + "training_data.json"
 test_data_target_path = data_target_dir + "test_data.json"
